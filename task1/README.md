@@ -60,9 +60,9 @@ using the `printf()` library functions.
    
    ### Understanding form the above task:
 
-   * from the abvoe task I have understood that to run the program you need proper header file which are at the system default location with the syntax : `#include <stdio.h>` or at our local directory :`#include "gpio.h"`.
+   * from the above task I have understood that to run the program you need proper header file which are at the system default location with the syntax : `#include <stdio.h>` or at our local directory :`#include "gpio.h"`.
 
-   * which we can include in out program so that it can call the API's which we have implemented on the header files.
+   * which we can include in our program so that it can call the API's which we have implemented on the header files.
 
    * here are the API for the GPIO functions which are there in gpio.h file:
    `void gpio_init(int pin, int direction);`
@@ -71,7 +71,7 @@ using the `printf()` library functions.
 
    * which can be act as input as well as output with 0 and 1 ,and it has been implemented as macros.
 
-   * we used macros because it easy to change the gpio pin which we needed for task.
+   * we used macros because it easy to change the gpio pin which we needed for preferred task.
 
    * In above example we have use PIN: 5 and PIN: 3 ,respectively as OUTPUT and as INPUT.
 
