@@ -2,3 +2,5 @@ docs/firmware_basics.md
 .vscode/
 task1/./*
 task1/task1_demo
+platformio.ini
+*.pio
