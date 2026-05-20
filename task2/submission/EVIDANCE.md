@@ -11,7 +11,7 @@ The physical board
 The pin being toggled (LED / probe / visible signal)
 ## click on the thumbnail below: 
 
-[![Watch Demo](thumbnail.png)](VID20260520101005.mp4)
+[![Watch Demo](thumbnail.png)](output.mp4)
 
 
 ## ------------------------------------------------------
