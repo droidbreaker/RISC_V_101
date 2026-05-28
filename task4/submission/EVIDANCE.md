@@ -43,7 +43,7 @@ click on thumbnail.
 
 ---
  
-## what you tested : 
+## what tested : 
 1. Tested the `GPIO workflow`, and turned ON all Possible LED's in this controller, there are only 15 GPIO, we can only use 12 GPIO as INPUT/OUTPUT.
 Others they are dedicated to UART , as RX and TX , and others connected to SWDIO.
 2. Tested `UART loopback` test using Rx and Tx pin by shorting them and sending and receiving data simultaneously within 10 ms timeout scaling using timer.
