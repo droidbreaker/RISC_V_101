@@ -1,7 +1,4 @@
-#include <ch32v00x.h>
 #include <debug.h>
-#include <ch32v00x_gpio.h>
-#include <ch32v00x_rcc.h>
 
 #ifndef GPIO_H
 #define GPIO_H

@@ -1,9 +1,9 @@
-#include "gpio.h"
-#include <ch32v00x.h>
+
 
 #ifndef UART_H
 #define UART_H
 
+#include "gpio.h"
 typedef struct{
     uint32_t PE:1;
     uint32_t FE:1;
