@@ -137,7 +137,6 @@ void test_GPIO(void)
             gpio_set_pin(portx,pin_x);
             if(gpio_read_pin(portx,pin_x))
             {
-                result_flag = 1;
                 snprintf((char*)bufferTx,sizeof(bufferTx),"Portx = %s ,pin = %d PASS \r\n",port_names[portx],pin_x);
             }
             else{
@@ -164,7 +163,6 @@ void test_GPIO(void)
             gpio_set_pin(portx,pin_x);
             if(gpio_read_pin(portx,pin_x))
             {
-                result_flag = 1;
                 snprintf((char*)bufferTx,sizeof(bufferTx),"Portx = %s ,pin = %d PASS \r\n",port_names[portx],pin_x);
             }
             else{
@@ -202,7 +200,6 @@ void test_UART(void)
         return;
     }
     if(strcmp((char*)bufferRx, test_str) == 0){
-        result_flag = 1;
         uart_SendBuffer((uint8_t*)"\r\nUART                        PASS\r\n",
                         strlen("\r\nUART                        PASS\r\n"));
         uart_SendBuffer((uint8_t*)"\r\n================= UART TEST PASS ====================\r\n",
@@ -228,7 +225,6 @@ void test_timer(void)
     uart_SendBuffer((uint8_t*)status_str, strlen(status_str));
     if((t2-t1) > 950 && (t2-t1) < 1050)   //this is for +- 50ms tolerance
     {
-        result_flag = 1;
         uart_SendBuffer((uint8_t*)"\r\nTIMER                      PASS \r\n",
                         strlen("\r\nTIMER                      PASS \r\n"));
         uart_SendBuffer((uint8_t*)"\r\n================= TIMER TEST PASS ====================\r\n",
