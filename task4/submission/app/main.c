@@ -41,7 +41,7 @@ int main ()
 
     uart_SendBuffer("\n================= PERIPHERAL TESTING ================\r\n",
                     strlen("\n================= PERIPHERAL TESTING ================\r\n"));
-    result_flag = 0;
+    
     uint8_t buffer[50];
     uint8_t i = 10;
     //==================================================
@@ -75,27 +75,34 @@ int main ()
     uart_SendBuffer((uint8_t*)str_timer_done,final_len3);
     Delay_Ms(500);
     //===================================================
-
-    if(result_flag != 0 && result_gpio_fail_flg == 0 && result_uart_fail_flg == 0 && result_timer_fail_flg == 0 ){
-    uart_SendBuffer("\n=================== ALL TEST PASS ================\r\n",
-                    strlen("\n=================== ALL TEST PASS ================\r\n"));
-    }
-    else if(result_uart_fail_flg == 1)
-    {
-        uart_SendBuffer("\n=================== UART TEST FAIL ================\r\n",
-                    strlen("\n=================== UART TEST FAIL ================\r\n"));
-    }
-    else if(result_gpio_fail_flg == 1)
+    
+    
+    result_flag = 0;
+    if(result_gpio_fail_flg == 1)
     {
         uart_SendBuffer("\n=================== GPIO TEST FAIL ================\r\n",
                     strlen("\n=================== GPIO TEST FAIL ================\r\n"));
+        result_flag = 1;
     }
-    else if(result_timer_fail_flg == 1)
+    if(result_uart_fail_flg == 1)
+    {
+        uart_SendBuffer("\n=================== UART TEST FAIL ================\r\n",
+                    strlen("\n=================== UART TEST FAIL ================\r\n"));
+        result_flag = 1;
+    }
+    if(result_timer_fail_flg == 1)
     {
         uart_SendBuffer("\n=================== TIMER TEST FAIL ================\r\n",
                     strlen("\n=================== TIMER TEST FAIL ================\r\n"));
+        result_flag = 1;
+    }
+    if(result_flag == 0)
+    {
+        uart_SendBuffer("\n=================== ALL TEST PASS ================\r\n",
+                    strlen("\n=================== ALL TEST PASS ================\r\n"));
     }
     
+    //========================================================
     while(i != 0)
     {
         sprintf((char*)buffer, "Booting in  %ld seconds\r\n", i--);    // Format the booting message with the current countdown value 
