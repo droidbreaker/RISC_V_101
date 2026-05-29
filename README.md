@@ -8,28 +8,8 @@ This project focuses on developing embedded firmware for a RISC-V System-on-Chip
 
 - Low-level firmware development
 - RISC-V assembly and C code
-- Peripheral drivers
+- Peripheral drivers [GPIO/UART/TIMER]
 
-<!--
-## Prerequisites
--->
-<!--
-- RISC-V toolchain (GCC, binutils, etc.)
-- Hardware: [Specify the RISC-V board/SoC, e.g., HiFive1, or generic]
-- Build system: Make, CMake, or similar
-- Serial communication tools (e.g., minicom, screen)
--->
-
-<!--
-## Project Structure
--->
-<!--
-- `src/`: Source code files
-- `include/`: Header files
-- `tools/`: Build scripts and utilities
-- `docs/`: Documentation
-- `tests/`: Test cases
--->
 
 ## Authenticity:
 
