@@ -68,13 +68,6 @@ gpio_reset_all()        uart_receiveByte()      (inline in uart.h)
                         uart_flushRx()
 ```
 
-**Design rules enforced in this layer:**
-
-- All register access is through typed structs — no raw address arithmetic in application code.
-- All `static` helper functions (`gpio_enable_clock`, `gpio_reset`) stay private to their `.c` file — not exposed unless needed externally.
-- All status check functions are `static inline` in the `.h` file — visible to any includer, zero call overhead, immune to compiler optimisation stripping.
-- No driver allocates heap memory — all state is register-backed or stack-local.
-
 ---
 
 ### Layer 4 — Application (`main.c`)
@@ -120,7 +113,7 @@ GPIOC->CFGLR |= (0x3 << 0);            //  not used in application code
     │         ├── uart_sendReceive()
     │         │         │
     │         │         ├── TX: write DATAR when TXE=1
-    │         │         ├── RX: read  DATAR when RXNE=1  [interleaved]
+    │         │         ├── RX: read  DATAR when RXNE=1  
     │         │         └── timeout via tim2_elapsed()
     │         │
     │         ├── strcmp(rx_buf, test_str)
@@ -184,7 +177,7 @@ GPIOC->CFGLR |= (0x3 << 0);            //  not used in application code
                           │
                ┌──────────┴──────────┐
                │                     │
-          result_flag  == 1         result_flag  == 0
+       result_flag  == 1         result_flag  == 0
                │                     │
         print each FAIL         print ALL PASS
                │                     │

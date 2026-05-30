@@ -12,7 +12,7 @@ The POST application moves through a strict linear sequence of states. There is
 no return to a previous state and no branching between tests — every state runs
 to completion before the next begins.
 
-[![application_states](POST_STATES_DIAGRAM.png)]
+[![application_states](proper_states_blocks.png)]
 
 > **Key design decision:** the application never early-exits on a single failure.
 > All three tests always run so every fault is visible in one POST report.
