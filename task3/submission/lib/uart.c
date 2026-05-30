@@ -49,14 +49,14 @@ void uart_init(GPIO_Port port, GPIO_PIN tx_pin, GPIO_PIN rx_pin)
 
     //by default USART pins are PD5 (TX) and PD6 (RX) on this microcontroller, so we will configure those pins accordingly.
     // PD5 TX
-    gpio(port)->gpio_cfglr &= ~(0xF << (tx_pin * 4));    // Clear the 4 bits corresponding to pin 5
-    gpio(port)->gpio_cfglr |= (0x3 << (tx_pin * 4));       // Set MODE to 11 (50MHz)
-    gpio(port)->gpio_cfglr |= (0x2 << ((tx_pin * 4) + 2)); // Set CNF to 10 (Alternate function output Push-pull)
+    gpio(port)->gpio_cfglr &= ~(0xF << (tx_pin * 4));      // Clear the 4 bits corresponding to pin 5
+    gpio(port)->gpio_cfglr |= (0xB << (tx_pin * 4));       // Set MODE to 11 (50MHz) Set CNF to 10 (Alternate function output Push-pull) 1011b
+   
 
     // PD6 RX
     gpio(port)->gpio_cfglr &= ~(0xF << (rx_pin * 4));    // Clear the 4 bits corresponding to pin 6
-    gpio(port)->gpio_cfglr |= (0x0 << (rx_pin * 4));       // Set MODE to 00 (Input mode)
-    gpio(port)->gpio_cfglr |= (0x2 << ((rx_pin * 4) + 2)); // Set CNF to 10 (Alternate function input floating)
+    gpio(port)->gpio_cfglr |= (0x4 << (rx_pin * 4));     // Set MODE to 00 (Input mode) Set CNF to 01 (Alternate function input floating) 0100b
+  
 
 
     USART1->BRR = (uint16_t)(24000000UL / 9600);          
