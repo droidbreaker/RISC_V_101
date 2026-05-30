@@ -59,8 +59,8 @@ uart_init(gpio_portD, GPIO_PIN_5, GPIO_PIN_6)
 for each port in [GPIOA, GPIOC, GPIOD]:
     for each pin in valid range:
         │
-        ├── skip reserved pins (PD0, PD1, PD5, PD6)
-        │       → print "SKIP" + reason
+        ├── skip reserved pins (PD5, PD6)
+        │       → print "UART TX RX" 
         │       → continue to next pin
         │
         ├── gpio_init(port, pin, OUTPUT)
@@ -102,7 +102,7 @@ uart_flushRx()              — second flush catches loopback
     │
 uart_sendReceive(test_str, rx_buf, len)
     │
-    ├── send first byte manually → kick off loopback
+    ├── send first byte manually → start the loopback
     │
     ├── while(rx_index < length):
     │       ├── if TXE=1  → write next TX byte
@@ -214,14 +214,14 @@ t=8565ms    POST complete           in total (~8.5 seconds)
             Booting process starts
 t= 8565ms
 booting process will take around 11 seconds to finish :
-
+(couting down from 10 - 0 )on every second.
 t= ~19565ms (19 seconds)
 +- 3 seconds approax.
 then system boots in 
 total : t = ~22 seconds
 ```
 
-**Total POST duration: approximately 22 seconds** — dominated by the 100ms
+**Total POST duration: approximately 22 seconds** — dominated by the 500ms
 `Delay_Ms` between each GPIO pin test. This can be reduced by lowering the
 inter-pin delay if startup time is critical.
 
@@ -248,8 +248,7 @@ main.c (orchestrator)
     │
     ├── calls test_GPIO()
     │       └── calls gpio_init(), gpio_set_pin(),
-    │               gpio_read_pin(), gpio_reset_pin()
-    │           never calls uart or tim2 directly
+    │               gpio_read_pin(), gpio_reset_pin()     
     │           uses uart_SendBuffer() for output only after each pin
     │
     ├── calls test_UART()
@@ -267,9 +266,10 @@ main.c (orchestrator)
 
 ```
 uart.c → tim2.h    (uart_sendReceive uses tim2_elapsed for timeout)
+uart.c → gpio.h    (for Tx and Rx GPIO pin which by default its in UART mode but still we did it using recommended settings.)
 ```
 
-This is explicit and intentional. All other drivers are fully independent.
+All other drivers are fully independent.
 
 ---
 
