@@ -31,8 +31,6 @@ A bare-metal Power On Self Test (POST) framework for the **VSDSquadron Mini** de
 
 ## Folder Structure
 
-## Folder Structure
-
 ```
 POST_project/
 ├── src/
