@@ -180,7 +180,7 @@ uint8_t  tim2_elapsed(uint16_t start_ms, uint16_t timeout_ms);
 | UART receive timeout | `waitTxComplete()` then receive — bytes already overwritten | Interleave TX and RX simultaneously |
 | Stale byte in RX buffer | `uart_flushRx()` read only one byte, left `\n` behind | Loop flush until `RXNE=0` |
 | Timer wrong frequency | Forgot `UG` bit after writing `PSC`/`ARR` | Always write `SWEVGR=0x01` after PSC/ARR |
-| Timeout unreliable | Loop counter varies with `-O0` vs `-O2` | Replace with TIM2 hardware timer |
+| Timeout unreliable | Loop counter varies with hardware optimization | Replace with TIM2 hardware timer |
 | Linker error on `gpio_reset` | Declared `static` — invisible outside `.c` file | Expose via header or wrap in `gpio_reset_all()` |
 
 ---
