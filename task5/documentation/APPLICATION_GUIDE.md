@@ -84,16 +84,6 @@ for each port in [GPIOA, GPIOC, GPIOD]:
                 → 500ms between pins — debounce, UART settle
 ```
 
-**Valid pin ranges enforced by application:**
-
-```c
-PortInfo ports[] = {
-    { "GPIOA", 0, 1, 2 },    // PA1–PA2 only
-    { "GPIOC", 1, 0, 7 },    // PC0–PC7
-    { "GPIOD", 2, 0, 7 },    // PD0–PD7 (with skip list)
-};
-```
-
 ---
 
 ### State 2 — UART POST
@@ -146,7 +136,7 @@ t2 = tim2_get_ms()          — record end
 
 elapsed = t2 - t1           — uint16 subtraction, rollover safe
 
-if(elapsed >= 995 && elapsed <= 1005)     — ±0.5% tolerance window
+if(elapsed >= 950 && elapsed <= 1050)     — ±50ms tolerance window
     → print "TIM2 PASS"
 else
     → print "TIM2 FAIL - expected 100ms got Xms"
@@ -155,7 +145,7 @@ else
 
 **Why this tests both `Delay_Ms` and TIM2:**
 `Delay_Ms` is a software loop calibrated at 24MHz. TIM2 is a hardware counter
-at 24MHz. If they agree within ±5%, both the CPU clock and the timer prescaler
+at 24MHz. If they agree within ±50ms, both the CPU clock and the timer prescaler
 are correct. If they disagree, either the clock is running at the wrong
 frequency or the TIM2 prescaler was not loaded correctly (missing UG bit).
 
@@ -183,34 +173,52 @@ simultaneous failures are all reported in a single pass.
 ```
 Timeline from power-on to POST complete:
 
-t=0ms       gpio_reset_all()        < 0.1ms
-t=0ms       tim2_init()             < 0.1ms  — TIM2 counter starts here
-t=0ms       uart_init()             < 0.1ms
+t=0ms       gpio_reset_all()        < 1ms
+t=1ms       tim2_init()             < 1ms  — TIM2 counter starts here
+t=2ms       uart_init()             < 1ms
 
-t=1ms       GPIO test begins
-            PA1 ... PA2             2 pins  × 100ms = 200ms
-            PC0 ... PC7             8 pins  × 100ms = 800ms
-            PD0 ... PD7             6 tested + 4 skipped × 100ms = 1000ms
+                  3ms + actual uart execution : 3 + 10ms
+
+t=30ms       GPIO test begins
+            PA1 ... PA2              Delay_Ms(500);              500 ms  //actual delay + 10ms for the total execution
+            PC0 ... PC7              Delay_MS(500 * 8); =        4000 ms // actual delay + 10ms for the total execution
+            PD0 ... PD7              Delay_Ms(500 * 5); =        2500 ms // actual delay + 10ms for the total execution
                                                                    ───────
-            GPIO total                                            ~2000ms (2 second)
+            GPIO total                                           7030ms (7 second)
 
-t=2000ms    UART test begins
+                  7060 + actual delay_MS (500) = 7560ms
+
+t=7560ms    UART test begins
             flush + 5ms settle      =   5ms
-            uart_sendReceive()      =  ~2ms   (16 bytes at 9600 baud)
+            uart_sendReceive()      =  ~2ms   
             strcmp + print          =   1ms
                                        ────
             UART total              =  ~8ms
 
-t=2008ms    TIM2 test begins
+               7560ms + actual Delay_Ms(500) = 8060 ms
+
+t=8060ms    TIM2 test begins
             Delay_Ms(1000)           = 1000ms
             check + print           =   1ms
                                        ────
             TIM2 total              = ~1001ms
 
-t=21109ms    Result report
+             8060ms + actual Delay_Ms(500) = 8560ms
+
+
+t=8560ms    Result report
             print flags             =   5ms
 
-t=21114ms    POST complete
+t=8565ms    POST complete           in total (~8.5 seconds)
+=================================
+            Booting process starts
+t= 8565ms
+booting process will take around 11 seconds to finish :
+
+t= ~19565ms (19 seconds)
++- 3 seconds approax.
+then system boots in 
+total : t = ~22 seconds
 ```
 
 **Total POST duration: approximately 22 seconds** — dominated by the 100ms
@@ -284,9 +292,9 @@ Problem:  Reconfiguring PD1 (SWIO) as GPIO output kills debug interface
           Reconfiguring PD5/PD6 as GPIO kills UART mid-test
 
 Handled:  Skip list checked before every gpio_init call
-          if(port == GPIOD && (pin == 0 || pin == 1 ||
-                                pin == 5 || pin == 6))
-              print "SKIP"
+          if(port == GPIOD && (pin == 5 || pin == 6))
+                                
+              print "USART Rx/Tx"
               continue
 ```
 
@@ -312,30 +320,9 @@ Handled:  double uart_flushRx() with 5ms settle between them
           first flush drains known stale bytes
           settle allows any in-flight bytes to arrive
           second flush catches anything that arrived during settle
-```
-
-### UART receive buffer overrun — reading too late
-
-```
-Problem:  USART1 has 1-byte RX buffer. If TX finishes before RX
-          starts reading, all bytes overwrite each other. Only last
-          byte survives. strcmp always fails.
-
-Handled:  uart_sendReceive() interleaves TX and RX in one loop
-          reads each byte as it arrives, before the next overwrites it
-          ORE flag check available via uart_isOverrun() for diagnosis
-```
-
-### TIM2 shadow register not loaded — timer wrong frequency
-
-```
-Problem:  Writing PSC/ATRLR without UG bit → timer runs at old
-          frequency until first overflow (up to 65 seconds away)
-          TIM2 POST would measure wrong elapsed time → false FAIL
-
-Handled:  tim2_init() always writes SWEVGR = 0x01 after PSC/ATRLR
-          forces immediate shadow register load
-          INTFR cleared after UG to prevent spurious interrupt
+          This is super important as we need to check for the proper reset of the byte/ clear.
+          otherwise it will give us some garbage value or the last byte which has been recieved by the 
+          DATAREG register.
 ```
 
 ### Multiple simultaneous failures
@@ -378,7 +365,3 @@ if(result_timer_fail_flg == 1) { uart_SendBuffer("TIMER TEST FAIL\r\n", ...); re
 
 if(result_flag  == 0) { uart_SendBuffer("ALL TESTS PASSED\r\n", ...); }
 ```
-
-
-
-
