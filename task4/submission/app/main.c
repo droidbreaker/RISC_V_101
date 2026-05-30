@@ -117,7 +117,7 @@ int main ()
 	snprintf(time_buffer,sizeof(time_buffer),"System booted in %ld seconds",((booting_time_end - booting_time_start)/1000));
 	uart_SendBuffer((uint8_t*)time_buffer,strlen(time_buffer));
 
-	while(1);
+	while(1);                                                          // CPU in running state in infinite loop.
 }
 
 void test_GPIO(void)
