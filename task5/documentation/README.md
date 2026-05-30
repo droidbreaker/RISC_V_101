@@ -24,7 +24,7 @@ A bare-metal Power On Self Test (POST) framework for the **VSDSquadron Mini** de
 |--------|------|---------------|
 | GPIO | `gpio.c / .h` | All available pins on GPIOA, GPIOC, GPIOD — output drive and INDR readback |
 | UART | `uart.c / .h` | USART1 full loopback — TX/RX interleaved send+receive, byte-for-byte compare |
-| Timer | `tim2.c / .h` | TIM2 free-running ms counter — known delay accuracy within ±5% tolerance |
+| Timer | `tim2.c / .h` | TIM2 free-running ms counter — known delay accuracy within +-50ms tolerance |
 | PWM | planned | GPIO brightness from LOW to HIGH testing |
 
 ---
@@ -181,7 +181,6 @@ uint8_t  tim2_elapsed(uint16_t start_ms, uint16_t timeout_ms);
 | GPIOD never tested | `gpio_reset()` inside `gpio_init()` wiped UART config | Call `gpio_reset()` once at boot only |
 | UART receive timeout | `waitTxComplete()` then receive — bytes already overwritten | Interleave TX and RX simultaneously |
 | Stale byte in RX buffer | `uart_flushRx()` read only one byte, left `\n` behind | Loop flush until `RXNE=0` |
-| Wrong CFGLR pin config | CNF written at `(pin×4)+2` — corrupts adjacent pin | Write full 4-bit nibble at `pin×4` |
 | Timer wrong frequency | Forgot `UG` bit after writing `PSC`/`ARR` | Always write `SWEVGR=0x01` after PSC/ARR |
 | Timeout unreliable | Loop counter varies with `-O0` vs `-O2` | Replace with TIM2 hardware timer |
 | Linker error on `gpio_reset` | Declared `static` — invisible outside `.c` file | Expose via header or wrap in `gpio_reset_all()` |
