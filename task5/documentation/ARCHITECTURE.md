@@ -216,15 +216,13 @@ UART status checks (`uart_isRxReady`, `uart_isTxComplete`, etc.) are `static inl
 - Visibility from any `.c` file that includes `uart.h` — no linker symbol needed.
 - Readability — `while(!uart_isTxComplete())` is self-documenting at the call site.
 
-### 4. Hardware timer over loop counters for timeout
-
-Loop-counter timeouts (`while(--timeout)`) change value silently when compiler optimisation level changes between debug (`-O0`) and release (`-O2`) builds. A loop that times out correctly at 100000 iterations under `-O0` may time out 10× faster under `-O2`.
+### 4. Proper Timer initialization rather then countdown loop (--timeout).
 
 TIM2 runs independently of the CPU. `tim2_elapsed()` always measures real wall-clock milliseconds regardless of what the compiler does to surrounding code.
 
 ### 5. Interleaved TX/RX for loopback
 
-The USART1 `DATAR` register is shared between TX and RX. Finishing all TX then starting RX means every received byte except the last has already been overwritten (1-byte hardware buffer, no FIFO). The `uart_sendReceive()` function writes the next TX byte when `TXE=1` and reads the next RX byte when `RXNE=1` inside the same loop — this is the only correct way to do loopback at this baud rate without a DMA or interrupt-driven ring buffer.
+The USART1 `DATAR` register is shared between TX and RX. Finishing all TX then starting RX means every received byte except the last has already been overwritten (1-byte hardware buffer). The `uart_sendReceive()` function writes the next TX byte when `TXE=1` and reads the next RX byte when `RXNE=1` inside the same loop — this is the only correct way to do loopback.
 
 ### 6. Fail flags over early exit
 
@@ -249,6 +247,3 @@ gpio.c
 tim2.c
   └── (no driver dependencies)
 ```
-
-
-
