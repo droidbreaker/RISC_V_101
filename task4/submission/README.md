@@ -212,9 +212,7 @@ System booted in 22 seconds
 | GPIOD pins not tested | `gpio_reset()` inside `gpio_init()` wiped UART config | Call `gpio_reset()` once at boot only |
 | UART receive always timeout | `waitTxComplete()` then receive — all bytes already overwritten | Interleave TX and RX simultaneously |
 | UART loopback stale byte | `uart_flushRx()` only read one byte, left `\n` behind | Loop flush until `RXNE=0` |
-| Wrong pin config (CFGLR) | CNF written at `(pin×4)+2` offset — corrupts adjacent pin | Write full 4-bit nibble at `pin×4` |
-| Loop counter timeout unreliable | Varies with `-O0` vs `-O2` optimisation | Replace with TIM2 hardware timer |
-| `gpio_reset` linker error | Declared `static` — invisible outside its `.c` file | Move to `uart.h` as `static inline` |
+| Loop counter timeout unreliable | Varies with hardware optimisation | Replace with TIM2 hardware timer |
 
 ---
 
@@ -234,17 +232,16 @@ System booted in 22 seconds
 
 | Register | Offset | Key bits |
 |----------|--------|---------|
-| `STATREG` | `0x00` | `RXNE`[5], `TC`[6], `TXE`[7], `ORE`[3], `FE`[1] |
+| `STATREG` | `0x00` | `RXNE`, `TC`, `TXE`, `ORE`, `FE` |
 | `DATAR` | `0x04` | TX write / RX read — shared single register |
 | `BRR` | `0x08` | Baud rate = HCLK / baud |
-| `CTLR1` | `0x0C` | `UE`[13], `TE`[3], `RE`[2] |
+| `CTLR1` | `0x0C` | `UE`, `TE`, `RE` |
 
 ### TIM2 (base: `0x40000000`)
 
 | Register | Offset | Purpose |
 |----------|--------|---------|
 | `CTLR1` | `0x00` | `CEN`[0] start/stop, `ARPE`[7] buffer ARR |
-| `INTFR` | `0x10` | `UIF`[0] overflow flag — must clear in ISR |
 | `SWEVGR` | `0x14` | `UG`[0] force shadow register load |
 | `CNT` | `0x24` | Current counter value |
 | `PSC` | `0x28` | Prescaler (shadow register) |
