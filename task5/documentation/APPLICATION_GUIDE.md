@@ -1,4 +1,4 @@
-# Application Demo — CH32V003 POST Framework
+# Application Demo — CH32V003 POST Firmware
 
 This document explains the application logic in `main.c` — how the POST sequence
 is orchestrated, what states it moves through, how timing is managed, and how
