@@ -9,41 +9,41 @@
 #define USART1_DATAREG (*(volatile uint8_t*)0x40013804)
 
 typedef struct{
-	uint32_t volatile PE:1;
-	uint32_t volatile FE:1;
-	uint32_t volatile NE:1;
-	uint32_t volatile ORE:1;
-	uint32_t volatile IDLE:1;
-	uint32_t volatile RXNE:1;
-	uint32_t volatile TC:1;
-	uint32_t volatile TXE:1;
-	uint32_t volatile LBD:1;
-	uint32_t volatile CTS:1;
-	uint32_t reserved:22;
+	volatile uint32_t PE:1;
+	volatile uint32_t FE:1;
+	volatile uint32_t NE:1;
+	volatile uint32_t ORE:1;
+	volatile uint32_t IDLE:1;
+	volatile uint32_t RXNE:1;
+	volatile uint32_t TC:1;
+	volatile uint32_t TXE:1;
+	volatile uint32_t LBD:1;
+	volatile uint32_t CTS:1;
+	volatile uint32_t reserved:22;
 }USART_STATR;
 
 typedef struct{
-	uint32_t volatile div_fraction:4;
-	uint32_t volatile div_mantissa:12;
-	uint32_t reserved:16;
+	volatile uint32_t div_fraction:4;
+	volatile uint32_t div_mantissa:12;
+	volatile uint32_t reserved:16;
 }USART_BRR;
 
 typedef struct{
-	uint32_t volatile SBK:1;
-	uint32_t volatile RWU:1;
-	uint32_t volatile RE:1;
-	uint32_t volatile TE:1;
-	uint32_t volatile IDLEIE:1;
-	uint32_t volatile RXNEIE:1;
-	uint32_t volatile TCIE:1;
-	uint32_t volatile TXEIE:1;
-	uint32_t volatile PEIE:1;
-	uint32_t volatile PS:1;
-	uint32_t volatile PCE:1;
-	uint32_t volatile WAKE:1;
-	uint32_t volatile M:1;
-	uint32_t volatile UE:1;
-	uint32_t reserved:18;
+	volatile uint32_t SBK:1;
+	volatile uint32_t RWU:1;
+	volatile uint32_t RE:1;
+	volatile uint32_t TE:1;
+	volatile uint32_t IDLEIE:1;
+	volatile uint32_t RXNEIE:1;
+	volatile uint32_t TCIE:1;
+	volatile uint32_t TXEIE:1;
+	volatile uint32_t PEIE:1;
+	volatile uint32_t PS:1;
+	volatile uint32_t PCE:1;
+	volatile uint32_t WAKE:1;
+	volatile uint32_t M:1;
+	volatile uint32_t UE:1;
+	volatile uint32_t reserved:18;
 }USART_CTLR1;
 
 static inline uint8_t uart_isTxEmpty(void)

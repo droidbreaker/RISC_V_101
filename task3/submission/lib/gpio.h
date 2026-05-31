@@ -21,13 +21,13 @@
 #define gpioD ((Typedef_Gpio_Port*)0x40011400)          // Base address for GPIO port D
 
 typedef struct{
-    uint32_t volatile gpio_cfglr;    // Configuration register for GPIO pins (MODE and CNF)
-    uint32_t volatile reserved;
-    uint32_t volatile gpio_indr;     // Input data register for GPIO pins
-    uint32_t volatile gpio_outdr;    // Output data register for GPIO pins
-    uint32_t volatile gpio_bshr;     // Bit set/reset register for GPIO pins
-    uint32_t volatile gpio_bcr;      // Bit reset register for GPIO pins
-    uint32_t volatile gpio_lckr;     // Additional registers can be added here if needed
+    volatile uint32_t gpio_cfglr;    // Configuration register for GPIO pins (MODE and CNF)
+    volatile uint32_t reserved;
+    volatile uint32_t gpio_indr;     // Input data register for GPIO pins
+    volatile uint32_t gpio_outdr;    // Output data register for GPIO pins
+    volatile uint32_t gpio_bshr;     // Bit set/reset register for GPIO pins
+    volatile uint32_t gpio_bcr;      // Bit reset register for GPIO pins
+    volatile uint32_t gpio_lckr;     // Additional registers can be added here if needed
 }Typedef_Gpio_Port;  
 
 typedef enum {

@@ -34,7 +34,7 @@
  */
 void uart_init(GPIO_Port port, GPIO_PIN tx_pin, GPIO_PIN rx_pin)
 {
-	RCC_APB2PCENR volatile *RCC1 = (RCC_APB2PCENR*)0x40021018;
+	volatile RCC_APB2PCENR *RCC1 = (RCC_APB2PCENR*)0x40021018;
 	RCC1->USART1EN = 1;                                               // Enable clock for USART1)
 	RCC1->AFIOEN   = 1;                                               // Enable clock for Alternate Function I/O
 	if(port == gpio_portD)
@@ -56,7 +56,7 @@ void uart_init(GPIO_Port port, GPIO_PIN tx_pin, GPIO_PIN rx_pin)
 
 	USART1->BRR = (uint16_t)(24000000UL / BAUD_RATE);          
 
-	USART_CTLR1 volatile *pUSART1ctlr1 = (USART_CTLR1*)0x4001380C;    // register address of "@CTLR" register.
+	volatile USART_CTLR1 *pUSART1ctlr1 = (USART_CTLR1*)0x4001380C;    // register address of "@CTLR" register.
 
 	pUSART1ctlr1->UE = 1;                                             // Enable USART1
 	pUSART1ctlr1->TE = 1;                                             // Enable transmitter
